@@ -1,0 +1,40 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++ Build",
+			"command": "cl.exe",
+			"args": [
+				"/std:c++latest", // C++ standard
+				"/nologo", // Suppress startup banner
+				"/EHsc", // Exception handling
+				"/Wall", // Warnings
+
+				"/Od", // Disable optimization
+
+				// Debug
+				"/Zi", // Generate debug information in PDB
+				"/Fd${workspaceFolder}\\build\\", // PDB file location
+
+				// Output files
+				"/Fe${workspaceFolder}\\build\\Test.exe", // Executable file location
+				"/Fo${workspaceFolder}\\build\\", // Object file location
+
+				// Source files
+				"${workspaceFolder}\\src\\TestMain.cpp",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compiler: cl.exe"
+		}
+	]
+}
