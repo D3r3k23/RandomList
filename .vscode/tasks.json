@@ -9,7 +9,6 @@
 				"/std:c++latest", // C++ standard
 				"/nologo", // Suppress startup banner
 				"/EHsc", // Exception handling
-				"/Wall", // Warnings
 
 				"/Od", // Disable optimization
 

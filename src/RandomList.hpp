@@ -1,7 +1,6 @@
 #ifndef RANDOM_LIST_HPP
 #define RANDOM_LIST_HPP
 
-#include <concepts>
 #include <optional>
 
 namespace RL
@@ -44,16 +43,17 @@ namespace RL
 
         unsigned size(void) const;
 
-        friend class Iterator;
-        friend class const_Iterator;
+        template <typename T> friend class Iterator;
+        template <typename T> friend class const_Iterator;
 
         Iterator<T> begin(void) { return Iterator<T>(head); }
-        Iterator<T> end(void)   { return Iterator<T>(tail); }
+        Iterator<T> end(void)   { return Iterator<T>(nullptr); }
 
-        const_Iterator<T> cbegin(void) const { return const_Iterator<T>(head); }
-        const_Iterator<T> cend(void)   const { return const_Iterator<T>(tail); }
+        const_Iterator<T> begin(void) const { return const_Iterator<T>(head); }
+        const_Iterator<T> end(void)   const { return const_Iterator<T>(nullptr); }
 
     private:
+        void init(void);
         void delete_node(Node<T>* node);
         void delete_list(void);
     };
@@ -80,23 +80,23 @@ namespace RL
         bool operator!=(const Iterator& other) const;
 
         Iterator& operator++(void);
-        Iterator operator++(int);
+        Iterator  operator++(int);
 
         Iterator& operator--(void);
-        Iterator operator--(int);
+        Iterator  operator--(int);
 
-        friend class const_Iterator;
+        template <typename T> friend class const_Iterator;
     };
 
     template <typename T>
     class const_Iterator
     {
     private:
-        const Node<T>* node;
+        Node<T> const* node;
 
     public:
         const_Iterator(void) = delete;
-        const_Iterator(Node<T>* node);
+        const_Iterator(Node<T> const* node);
 
         const_Iterator(const const_Iterator& other) = default;
         const_Iterator& operator=(const const_Iterator& other) = default;
@@ -113,23 +113,11 @@ namespace RL
         bool operator!=(const const_Iterator& other) const;
 
         const_Iterator& operator++(void);
-        const_Iterator operator++(int);
+        const_Iterator  operator++(int);
 
         const_Iterator& operator--(void);
-        const_Iterator operator--(int);
+        const_Iterator  operator--(int);
     };
-
-    template <typename T, typename P>
-    concept UnaryPredicate = requires(T a, P p)
-    {
-        { p(a) } -> std::same_as<bool>;
-    };
-
-    template <typename T, UnaryPredicate P>
-    Iterator<T> find_if(Iterator<T> first, Iterator<T> last, P pred);
-
-    template <typename T, UnaryPredicate P>
-    const_Iterator<T> find_if(const_Iterator<T> first, const_Iterator<T> last, P pred);
 }
 
 #include "RandomList.tpp" // Template definitions

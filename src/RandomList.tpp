@@ -9,9 +9,7 @@ namespace RL
     template <typename T>
     List<T>::List(void)
     {
-        head = nullptr;
-        tail = nullptr;
-        length = 0;
+        init();
     }
 
     template <typename T>
@@ -22,22 +20,20 @@ namespace RL
 
     template <typename T>
     List<T>::List(const List<T>& other)
-        : List()
     {
-        for (auto node = other.head; node = node->next; node)
-            push_back(node->data);
+        init();
+        for (const auto& item : other)
+            push_back(item);
     }
 
     template <typename T>
     List<T>::List(List<T>&& other)
     {
-        delete_list();
-
         head = other.head;
         tail = other.tail;
         length = other.length;
 
-        other.delete_list();
+        other.init();
     }
 
     template <typename T>
@@ -64,7 +60,7 @@ namespace RL
             tail = other.tail;
             length = other.length;
 
-            other.delete_list();
+            other.init();
         }
         return *this;
     }
@@ -140,6 +136,14 @@ namespace RL
     }
 
     template <typename T>
+    void List<T>::init(void)
+    {
+        head = nullptr;
+        tail = nullptr;
+        length = 0;
+    }
+
+    template <typename T>
     void List<T>::delete_node(Node<T>* node)
     {
         if (node == head && node == tail)
@@ -171,9 +175,7 @@ namespace RL
             delete node;
             node = next;
         }
-        head = nullptr;
-        tail = nullptr;
-        length = 0;
+        init();
     }
 
     //////////////////////////////
@@ -216,7 +218,7 @@ namespace RL
     }
 
     template <typename T>
-    Iterator& Iterator<T>::operator++(void)
+    Iterator<T>& Iterator<T>::operator++(void)
     {
         if (node)
             node = node->next;
@@ -224,15 +226,15 @@ namespace RL
     }
 
     template <typename T>
-    Iterator Iterator<T>::operator++(int)
+    Iterator<T> Iterator<T>::operator++(int)
     {
         auto temp = *this;
-        ++*this;
+        ++(*this);
         return temp;
     }
 
     template <typename T>
-    Iterator& Iterator<T>::operator--(void)
+    Iterator<T>& Iterator<T>::operator--(void)
     {
         if (node)
             node = node->prev;
@@ -240,10 +242,10 @@ namespace RL
     }
 
     template <typename T>
-    Iterator Iterator<T>::operator--(int)
+    Iterator<T> Iterator<T>::operator--(int)
     {
         auto temp = *this;
-        --*this;
+        --(*this);
         return temp;
     }
 
@@ -252,17 +254,17 @@ namespace RL
     //////////////////////////////
 
     template <typename T>
-    const_Iterator<T>::const_Iterator(Node<T>* node)
+    const_Iterator<T>::const_Iterator(Node<T> const* node)
         : node(node)
     { }
 
     template <typename T>
-    const_Iterator(const Iterator<T>& other)
+    const_Iterator<T>::const_Iterator(const Iterator<T>& other)
         : node(other.node)
     { }
 
     template <typename T>
-    const_Iterator& operator=(const Iterator<T>& other)
+    const_Iterator<T>& const_Iterator<T>::operator=(const Iterator<T>& other)
     {
         node = other.node;
     }
@@ -298,7 +300,7 @@ namespace RL
     }
 
     template <typename T>
-    const_Iterator& const_Iterator<T>::operator++(void)
+    const_Iterator<T>& const_Iterator<T>::operator++(void)
     {
         if (node)
             node = node->next;
@@ -306,15 +308,15 @@ namespace RL
     }
 
     template <typename T>
-    const_Iterator const_Iterator<T>::operator++(int)
+    const_Iterator<T> const_Iterator<T>::operator++(int)
     {
         auto temp = *this;
-        ++*this;
+        ++(*this);
         return temp;
     }
 
     template <typename T>
-    const_Iterator& const_Iterator<T>::operator--(void)
+    const_Iterator<T>& const_Iterator<T>::operator--(void)
     {
         if (node)
             node = node->prev;
@@ -322,32 +324,10 @@ namespace RL
     }
 
     template <typename T>
-    const_Iterator const_Iterator<T>::operator--(int)
+    const_Iterator<T> const_Iterator<T>::operator--(int)
     {
         auto temp = *this;
-        --*this;
+        --(*this);
         return temp;
-    }
-
-    /////////////////////////////
-    //-------- Utility --------//
-    /////////////////////////////
-
-    template <typename T, UnaryPredicate P>
-    Iterator<T> find_if(Iterator<T> first, Iterator<T> last, P pred)
-    {
-        for (auto it = first; it != last; it++)
-            if (pred(*it))
-                return it;
-        return Iterator<T>(nullptr);
-    }
-
-    template <typename T, UnaryPredicate P>
-    const_Iterator<T> find_if(const_Iterator<T> first, const_Iterator<T> last, P pred)
-    {
-        for (auto it = first; it != last; it++)
-            if (pred(*it))
-                return it;
-        return const_Iterator<T>(nullptr);
     }
 }
