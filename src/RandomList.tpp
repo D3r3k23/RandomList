@@ -37,7 +37,7 @@ namespace RL
     }
 
     template <typename T>
-    List<T>& List<T>::operator=(const List<T>& other) const
+    List<T>& List<T>::operator=(const List<T>& other)
     {
         if (this != &other)
         {
