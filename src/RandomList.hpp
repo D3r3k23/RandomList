@@ -32,7 +32,7 @@ namespace RL
         List(const List& other);
         List(List&& other);
 
-        List& operator=(const List& other) const;
+        List& operator=(const List& other);
         List& operator=(List&& other);
 
         void push_back(const T& data);
